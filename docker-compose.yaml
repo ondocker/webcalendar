@@ -1,0 +1,24 @@
+version: '3.7'
+
+services:
+
+  db:
+    image: mariadb
+    volumes:
+      - ./dbdata:/var/lib/mysql
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+      - MYSQL_PASSWORD=webcal01
+      - MYSQL_DATABASE=webcalendar
+      - MYSQL_USER=webcalendar
+    restart: unless-stopped
+
+  webcalendar:
+    build: .
+    depends_on:
+      - db
+    volumes:
+      - ./settings.php:/var/www/html/includes/settings.php
+    ports:
+      - 8080:80
